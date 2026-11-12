@@ -1,0 +1,76 @@
+{
+  "transport": {
+    "description": "连接方式",
+    "type": "string",
+    "options": [
+      "direct",
+      "relay"
+    ],
+    "default": "direct",
+    "hint": "direct：直接访问 DSH 桥接的 HTTP 地址（同机/局域网）。relay：经中转服务器加密封装，适合两边都没有公网端口。"
+  },
+  "api_url": {
+    "description": "DSH 桥接地址（direct 模式）",
+    "type": "string",
+    "default": "http://127.0.0.1:8399",
+    "hint": "同机时用 http://127.0.0.1:8399；AstrBot 在另一台机器时填 http://<DSH机器IP>:8399（需要 DSH 插件把 http.host 改成 0.0.0.0 并放行端口）。"
+  },
+  "token": {
+    "description": "桥接令牌",
+    "type": "string",
+    "default": "",
+    "hint": "DSH 端 ~/.dsh/astrbot-bridge.token 的内容（或在 DSH 插件配置里写死的 token）。"
+  },
+  "relay_url": {
+    "description": "中转服务器地址（relay 模式）",
+    "type": "string",
+    "default": "",
+    "hint": "host:port，例如 relay.example.com:9443。两端都能连到的机器上运行 relay-server.mjs。"
+  },
+  "relay_room": {
+    "description": "中转房间 ID（relay 模式）",
+    "type": "string",
+    "default": "",
+    "hint": "与 DSH 插件 relay.room 相同：32 位十六进制。"
+  },
+  "relay_key": {
+    "description": "中转房间密钥（relay 模式）",
+    "type": "string",
+    "default": "",
+    "hint": "与 DSH 插件 relay.key 相同：base64url 编码的 16 字节密钥。等同于钥匙，不要外传。"
+  },
+  "timeout_seconds": {
+    "description": "单次任务超时（秒）",
+    "type": "int",
+    "default": 900,
+    "hint": "DSH 执行复杂任务可能很久；超时后会话会被取消，已产生的内容仍会回传。"
+  },
+  "max_chars": {
+    "description": "单条消息最大字符数",
+    "type": "int",
+    "default": 1500,
+    "hint": "超出后按行拆成多条发送；QQ 官方接口建议 1000 以内。"
+  },
+  "progress_message": {
+    "description": "执行前先发一句提示",
+    "type": "bool",
+    "default": true
+  },
+  "progress_text": {
+    "description": "提示文案",
+    "type": "string",
+    "default": "🔍 深度求索中…"
+  },
+  "progress_interval_minutes": {
+    "description": "长任务进度提示间隔（分钟）",
+    "type": "int",
+    "default": 10,
+    "hint": "等待期间每隔这么久发一句「（任务名）已经深度求索了 X 时 X 分…」；0 表示不发。"
+  },
+  "notify_poll_seconds": {
+    "description": "未送达结果检查间隔（秒）",
+    "type": "int",
+    "default": 20,
+    "hint": "AstrBot 超时放弃等待后，DSH 仍会执行完；这里决定多久检查一次并把结果作为主动消息发回。0 表示关闭。"
+  }
+}

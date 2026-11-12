@@ -1,0 +1,3 @@
+# The relay transport seals frames with AES-128-GCM. AstrBot already depends on
+# cryptography; the pin only matters for unusual deployments.
+cryptography>=41
