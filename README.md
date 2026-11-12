@@ -48,8 +48,8 @@ AstrBot/data/plugins/astrbot_plugin_dsh/
 └── requirements.txt
 ```
 
-- 本地部署：`cp -r astrbot-plugin-dsh ~/AstrBot/data/plugins/astrbot_plugin_dsh`
-- 或者打包成 zip 在「插件管理 → 安装插件」里上传
+- 直接下载打包好的 zip：[Releases · latest](https://github.com/umeabc/astrbot-plugin-dsh/releases/latest)（`astrbot-plugin-dsh.zip`），在面板「插件管理 → 安装插件 → 上传」选它
+- 或者本地部署：`cp -r astrbot-plugin-dsh ~/AstrBot/data/plugins/astrbot_plugin_dsh`
 - Docker 部署：挂载到 `/AstrBot/data/plugins/astrbot_plugin_dsh`
 
 依赖只有 `cryptography`（AstrBot 本来就装），`aiohttp` 也是自带的；`requirements.txt` 里写了一份，
