@@ -2,5 +2,5 @@ name: astrbot_plugin_dsh
 desc: 远程调用本机 DeepSeek Harness：/dsh <指令> 执行任务，/dshls 按工作区查看会话，/dsh <序号> 切换会话
 author: umeabc
 version: 0.3.0
-repo: ""
+repo: https://github.com/umeabc/astrbot-plugin-dsh
 short_desc: 让聊天机器人借用本机 DSH 干活
