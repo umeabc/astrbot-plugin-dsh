@@ -170,7 +170,7 @@ class DshBridgePlugin(Star):
     name = "astrbot_plugin_dsh"
     author = "umeabc"
     desc = "在聊天里远程调用本机 DeepSeek Harness 执行任务"
-    version = "0.3.0"
+    version = "0.3.1"
 
     def __init__(self, context: Context, config: Any = None) -> None:
         super().__init__(context, config)
@@ -546,6 +546,17 @@ class DshBridgePlugin(Star):
         async for result in self._reply(event, "\n".join(lines)):
             yield result
 
+    @staticmethod
+    def _switched_label(index: int, data: dict[str, Any]) -> str:
+        """`4. 会话名`，没有标题时退回到短 id，免得切完不知道切到了哪条。"""
+        title = str(data.get('title') or '').strip()
+        session_id = str(data.get('sessionId') or '')
+        if title:
+            return f'{index}. {title}'
+        if session_id:
+            return f'{index}. (未命名 · #{session_id[:8]})'
+        return f'{index}'
+
     async def _switch(self, event: AstrMessageEvent, index: int):
         key = self.chat_key(event)
         try:
@@ -558,15 +569,13 @@ class DshBridgePlugin(Star):
                 yield result
             return
 
-        title = data.get('title') or ''
-        workspace = data.get('workspace') or ''
-        label = f'{index}. {title}' if title else f'{index}'
-        extra = f'工作区：{workspace}' if workspace else ''
-        message = f'✅ 已切换到会话 {label}'
-        if extra:
-            message += chr(10) + extra
-        message += chr(10) + '之后的 /dsh <指令> 会在该会话里继续；/dsh new <指令> 另开一条。'
-        async for result in self._reply(event, message):
+        label = self._switched_label(int(data.get('index') or index), data)
+        workspace = str(data.get('workspace') or '')
+        lines = [f'✅ 已切换到 {label}']
+        if workspace:
+            lines.append(f'工作区：{workspace}')
+        lines.append('之后的 /dsh <指令> 会在该会话里继续；/dsh new <指令> 另开一条。')
+        async for result in self._reply(event, chr(10).join(lines)):
             yield result
 
     async def _stop(self, event: AstrMessageEvent):

@@ -192,8 +192,9 @@ class FakeClient:
     async def switch(self, key, session_id="", index=None):
         self.calls.append(("switch", key, index))
         return {
-            "sessionId": "s2",
+            "sessionId": "s2abcdef1234",
             "mode": "continue",
+            "index": index,
             "title": "看磁盘",
             "workspace": "D:/harness",
         }
@@ -255,7 +256,13 @@ async def main_checks() -> int:
 
     switched = await collect(plugin.dsh(AstrMessageEvent("/dsh 2")))
     check("switch asks by index", plugin._client.calls[-1] == ("switch", "qq/group/1", 2), plugin._client.calls[-1])
-    check("switch reports the target", "已切换到会话 2. 看磁盘" in switched[0], switched[0])
+    check("switch reports the session name", "已切换到 2. 看磁盘" in switched[0], switched[0])
+    check("switch reports the workspace", "工作区：D:/harness" in switched[0], switched[0])
+    check(
+        "unnamed sessions fall back to a short id",
+        main.DshBridgePlugin._switched_label(4, {"sessionId": "abcdef123456"}) == "4. (未命名 · #abcdef12)",
+        main.DshBridgePlugin._switched_label(4, {"sessionId": "abcdef123456"}),
+    )
 
     status = await collect(plugin.dsh(AstrMessageEvent("/dsh status")))
     check("status shows the model", "gpt-6.1-sol" in status[0] and "openai-codex" in status[0], status[0])
